@@ -1,0 +1,6 @@
+# библиотеки
+node_modules
+
+# Git
+.git/
+.gitignore

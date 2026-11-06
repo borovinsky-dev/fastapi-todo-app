@@ -7,8 +7,10 @@ env_path = Path(__file__).resolve().parents[2]
 
 class Settings(BaseSettings):
     app_name: str
-    # подключение к БД на синхронном движке и создание сессии для синхронных подключений
+    # подключение к БД на синхронном движке и создание сессии для синхронных подключений с локального хоста
     database_url: str = "postgresql://todo_user:todo_pass@localhost:5432/todo_db"
+    # для контейнера backend в .env
+
     database_user: str
     database_pass: str
     # если не указано, то берется из env для settings приложения

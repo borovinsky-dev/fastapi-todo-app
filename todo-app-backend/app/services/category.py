@@ -10,7 +10,7 @@ from .exceptions import CategoryNotFound
 
 
 class CategoryService:
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         self.session = session
         self.category_repo = CategoryRepo(session)
 

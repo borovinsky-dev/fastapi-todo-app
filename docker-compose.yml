@@ -1,0 +1,51 @@
+services:
+  backend-fastapi:
+    build: ./todo-app-backend
+    container_name: todo-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./todo-app-backend/.env
+    depends_on:
+      db-postgres:
+        condition: service_healthy
+    networks:
+      - todo-app-network
+    restart: unless-stopped
+
+  frontend-node:
+    build: ./todo-app-frontend
+    container_name: todo-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend-fastapi
+    networks:
+      - todo-app-network
+    restart: unless-stopped
+
+  db-postgres:
+    image: postgres:16-alpine
+    container_name: todo-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - todo-app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  todo-app-network:
+    driver: bridge
